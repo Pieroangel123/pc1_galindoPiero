@@ -1,0 +1,38 @@
+﻿<form id="tarjeta-form" class="form">
+  <div class="form-group">
+    <label for="numero-tarjeta">Número de tarjeta:</label>
+    <input type="text" class="form-control" id="numero-tarjeta" required>
+  </div>
+  <div class="form-group">
+    <label for="fecha-vencimiento">Fecha de vencimiento:</label>
+    <input type="date" class="form-control" id="fecha-vencimiento" required>
+  </div>
+  <div class="form-group">
+    <label for="monto-pagar">Monto a pagar:</label>
+    <input type="number" class="form-control" id="monto-pagar" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+<script>
+  const form = document.querySelector('#tarjeta-form');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const numeroTarjeta = document.querySelector('#numero-tarjeta').value;
+    const fechaVencimiento = new Date(document.querySelector('#fecha-vencimiento').value);
+    const montoPagar = parseFloat(document.querySelector('#monto-pagar').value);
+
+    const diasRetraso = Math.max(0, Math.floor((new Date() - fechaVencimiento) / (1000 * 60 * 60 * 24)));
+    const mora = montoPagar * (diasRetraso * 0.005);
+    const montoFinal = montoPagar + mora;
+
+    const resultadoElemento = document.createElement('div');
+    resultadoElemento.classList.add('alert', 'alert-success');
+    resultadoElemento.innerHTML = `
+      <p>Número de tarjeta: ${numeroTarjeta}</p>
+      <p>Monto a pagar: S/${montoPagar.toFixed(2)}</p>
+      <p>Mora por ${diasRetraso} días de retraso: S/${mora.toFixed(2)}</p>
+      <p>Monto final a pagar: S/${montoFinal.toFixed(2)}</p>
+    `;
+    form.parentElement.appendChild(resultadoElemento);
+  });
+</script>
